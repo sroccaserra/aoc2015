@@ -1,11 +1,10 @@
-from functools import reduce
 import fileinput
 import re
 import sys
 
 
 def part_one(lines):
-    grid = [0]*1000000
+    grid = [0] * 1000000
     commands = [parse_line(line) for line in lines]
     for command in commands:
         execute_command_part_one(grid, command)
@@ -13,7 +12,7 @@ def part_one(lines):
 
 
 def part_two(lines):
-    grid = [0]*1000000
+    grid = [0] * 1000000
     commands = [parse_line(line) for line in lines]
     for command in commands:
         execute_command_part_two(grid, command)
@@ -21,18 +20,23 @@ def part_two(lines):
 
 
 def parse_line(line):
-    result = re.match(r'([a-z ]+) ([0-9]+)\,([0-9]+) through ([0-9]+),([0-9]+)', line)
-    return (result.group(1), (int(result[2]), int(result[3])), (int(result[4]), int(result[5])))
+    r = r"([a-z ]+) ([0-9]+)\,([0-9]+) through ([0-9]+),([0-9]+)"
+    result = re.match(r, line)
+    return (
+        result.group(1),
+        (int(result[2]), int(result[3])),
+        (int(result[4]), int(result[5])),
+    )
 
 
 def execute_command_part_one(grid, command):
     c, (x1, y1), (x2, y2) = command
-    for y in range(y1, y2+1):
-        for x in range(x1, x2+1):
-            offset = y*1000 + x
-            if (c == 'turn off'):
+    for y in range(y1, y2 + 1):
+        for x in range(x1, x2 + 1):
+            offset = y * 1000 + x
+            if c == "turn off":
                 grid[offset] = 0
-            elif (c == 'turn on'):
+            elif c == "turn on":
                 grid[offset] = 1
             else:
                 grid[offset] = 1 - grid[offset]
@@ -41,12 +45,12 @@ def execute_command_part_one(grid, command):
 
 def execute_command_part_two(grid, command):
     c, (x1, y1), (x2, y2) = command
-    for y in range(y1, y2+1):
-        for x in range(x1, x2+1):
-            offset = y*1000 + x
-            if (c == 'turn off'):
+    for y in range(y1, y2 + 1):
+        for x in range(x1, x2 + 1):
+            offset = y * 1000 + x
+            if c == "turn off":
                 grid[offset] = max(0, grid[offset] - 1)
-            elif (c == 'turn on'):
+            elif c == "turn on":
                 grid[offset] = grid[offset] + 1
             else:
                 grid[offset] = grid[offset] + 2

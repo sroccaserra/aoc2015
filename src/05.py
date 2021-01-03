@@ -15,9 +15,8 @@ def part_two(lines):
 
 
 def is_nice_part_one(line):
-    if (re.search(r'ab|cd|pq|xy', line)):
+    if re.search(r"ab|cd|pq|xy", line):
         return False
-    n = 0
     vowels = filter(lambda x: x in V, line)
     return len(list(vowels)) >= 3 and has_two_consecutive_chars(line)
 
@@ -30,9 +29,9 @@ def has_two_consecutive_chars(line):
     i = 0
     n = len(line)
     while True:
-        if (i+1 == n):
+        if i + 1 == n:
             return False
-        if (line[i] == line[i+1]):
+        if line[i] == line[i + 1]:
             return True
         i += 1
 
@@ -41,9 +40,9 @@ def repeat_and_between(line):
     i = 0
     n = len(line)
     while True:
-        if (i+2 == n):
+        if i + 2 == n:
             return False
-        if (line[i] == line[i+2]):
+        if line[i] == line[i + 2]:
             return True
         i += 1
 
@@ -53,12 +52,12 @@ def repeat_pair(line):
     i = 2
     n = len(line)
     while True:
-        if (i+1 >= n):
+        if i + 1 >= n:
             j = j + 1
             i = j + 2
-        if (j + 3 >= n):
+        if j + 3 >= n:
             return False
-        if (line[i] == line[j] and line[i+1] == line[j+1]):
+        if line[i] == line[j] and line[i + 1] == line[j + 1]:
             return True
         i += 1
 

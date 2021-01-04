@@ -10,9 +10,20 @@ import qualified Data.Map as Map
 import Text.ParserCombinators.ReadP
 import Debug.Trace
 
-partOne xs = wired ! "a"
+partOne xs = allWired ! "a"
   where (_, sorted) = until (\(t, _) -> Map.null t) untangle (treeFromExprs xs, [])
-        wired = foldl eval Map.empty $ reverse sorted
+        allWired = foldl eval Map.empty $ reverse sorted
+
+untangle :: (ExpressionTree, [Expr]) -> (Map Expr [Expr], [Expr])
+untangle (tree, out) = (tree'', leaf:out)
+  where leaf = Set.findMin $ Map.keysSet $ Map.filter null tree
+        tree' = Map.delete leaf tree
+        tree'' = Map.map (delete leaf) tree'
+
+treeFromExprs :: [Expr] -> ExpressionTree
+treeFromExprs xs = (foldl (\a e -> Map.insert e (deps e) a)) Map.empty xs
+  where m = Map.fromList $ map (\x -> (dst x, x)) xs
+        deps e = map (m !) $ depNames e
 
 data Expr = AssignInt Word16 String
           | Assign String String
@@ -24,31 +35,7 @@ data Expr = AssignInt Word16 String
           | Not String String
           deriving (Show, Ord, Eq)
 
-untangle :: (Map Expr [Expr], [Expr]) -> (Map Expr [Expr], [Expr])
-untangle (m, out) | Map.null m = (Map.empty, out)
-untangle (tree, out) = (tree'', leaf:out)
-  where leaf = Set.findMin $ Map.keysSet $ Map.filter null tree
-        tree' = Map.delete leaf tree
-        tree'' = Map.map (delete leaf) tree'
-
-eval :: Map String Word16 -> Expr -> Map String Word16
-eval m (AssignInt n dst) = Map.insert dst n m
-eval m (Assign src dst) = Map.insert dst value m
-  where value = m!src
-eval m (AndInt n src dst) = Map.insert dst (n .&. value) m
-  where value = m!src
-eval m (And s1 s2 dst) = Map.insert dst (v1 .&. v2) m
-  where v1 = m!s1
-        v2 = m!s2
-eval m (Or s1 s2 dst) = Map.insert dst (v1 .|. v2) m
-  where v1 = m!s1
-        v2 = m!s2
-eval m (LShift src n dst) = Map.insert dst (shiftL value $ fromIntegral n) m
-  where value = m!src
-eval m (RShift src n dst) = Map.insert dst (shiftR value $ fromIntegral n) m
-  where value = m!src
-eval m (Not src dst) = Map.insert dst (complement value) m
-  where value = m!src
+type ExpressionTree = Map Expr [Expr]
 
 dst :: Expr -> String
 dst (AssignInt _ dst) = dst
@@ -60,14 +47,6 @@ dst (LShift _ _ dst) = dst
 dst (RShift _ _ dst) = dst
 dst (Not _ dst) = dst
 
-expressionsByName xs = foldl (\m x -> Map.insert (dst x) x m) Map.empty xs
-
-treeFromExprs xs = (foldl (\a e -> Map.insert e (deps m e) a)) Map.empty xs
-  where m = expressionsByName xs
-
-deps :: Map String Expr -> Expr -> [Expr]
-deps m e = map (m !) $ depNames e
-
 depNames :: Expr -> [String]
 depNames (AssignInt _ _) = []
 depNames (Assign src _) = [src]
@@ -77,6 +56,25 @@ depNames (Or s1 s2 _) = [s1, s2]
 depNames (LShift src _ _) = [src]
 depNames (RShift src _ _) = [src]
 depNames (Not src _) = [src]
+
+eval :: Map String Word16 -> Expr -> Map String Word16
+eval m (AssignInt n dst) = Map.insert dst n m
+eval m (Assign src dst) = Map.insert dst value m
+  where value = m ! src
+eval m (AndInt n src dst) = Map.insert dst (n .&. value) m
+  where value = m ! src
+eval m (And s1 s2 dst) = Map.insert dst (v1 .&. v2) m
+  where v1 = m ! s1
+        v2 = m ! s2
+eval m (Or s1 s2 dst) = Map.insert dst (v1 .|. v2) m
+  where v1 = m ! s1
+        v2 = m ! s2
+eval m (LShift src n dst) = Map.insert dst (shiftL value $ fromIntegral n) m
+  where value = m ! src
+eval m (RShift src n dst) = Map.insert dst (shiftR value $ fromIntegral n) m
+  where value = m ! src
+eval m (Not src dst) = Map.insert dst (complement value) m
+  where value = m ! src
 
 ---
 -- Parsing

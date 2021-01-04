@@ -14,6 +14,14 @@ partOne xs = allWired ! "a"
   where (_, sorted) = until (\(t, _) -> Map.null t) untangle (treeFromExprs xs, [])
         allWired = foldl eval Map.empty $ reverse sorted
 
+partTwo xs = (foldl eval Map.empty newWiring) ! "a"
+  where (_, sorted) = until (\(t, _) -> Map.null t) untangle (treeFromExprs xs, [])
+        wiring = reverse sorted
+        allWired = foldl eval Map.empty wiring
+        newBValue = allWired ! "a"
+        c:b:rest = wiring
+        newWiring = c:AssignInt newBValue "b":rest
+
 untangle :: (ExpressionTree, [Expr]) -> (Map Expr [Expr], [Expr])
 untangle (tree, out) = (tree'', leaf:out)
   where leaf = Set.findMin $ Map.keysSet $ Map.filter null tree
@@ -102,4 +110,4 @@ symbol = munch1 isAlpha
 ---
 -- Running
 
-main = interact $ show . partOne . parse
+main = interact $ show . partTwo . parse

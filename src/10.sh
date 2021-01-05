@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 in=1321131112
 
 for n in $(seq 1 50)

@@ -7,11 +7,13 @@ import qualified Data.Map as Map
 import Text.ParserCombinators.ReadP
 
 
-partOne :: [(String, String, Int)] -> Int
-partOne xs = minimum $ map (pathDistance graph) $ permutations cities
+partOne = solve minimum
+partTwo = solve maximum
+
+solve :: ([Int] -> Int) -> [(String, String, Int)] -> Int
+solve f xs = f $ map (pathDistance graph) $ permutations cities
   where graph = foldl addToGraph Map.empty xs
         cities = toList $ Map.keysSet graph
-        start:_ = cities
 
 addToGraph :: Map String [(String, Int)] -> (String, String, Int) -> Map String [(String, Int)]
 addToGraph m (x, y, d) = Map.insertWith (++) x [(y, d)] $ Map.insertWith (++) y [(x, d)] m
@@ -37,4 +39,4 @@ parser = do
   c <- read <$> munch1 isDigit
   return (a, b, c)
 
-main = interact $ show.partOne.parse
+main = interact $ show.partTwo.parse

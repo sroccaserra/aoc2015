@@ -29,6 +29,14 @@ def transform(raw_data):
     return result
 
 
+def add_me(data):
+    names = list(data)
+    data['me'] = dict()
+    for n in names:
+        data.get(n)['me'] = 0
+        data.get('me')[n] = 0
+
+
 def find_max(data):
     known_max = -2**63
     names = list(data)
@@ -52,4 +60,6 @@ if __name__ == "__main__" and not sys.flags.interactive:
     lines = [line.strip() for line in fileinput.input()]
     raw_data = parse(lines)
     data = transform(raw_data)
+    print(find_max(data))
+    add_me(data)
     print(find_max(data))

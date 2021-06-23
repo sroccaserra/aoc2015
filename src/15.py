@@ -21,15 +21,18 @@ def parseLine(line):
 
 
 def solve(ingredients):
-    result = 0
+    result_1 = 0
+    result_2 = 0
     for i in range(100):
         for j in range(0, 100-i):
             for k in range(0, 100-i-j):
                 h = 100 - i - j - k
                 s = score(ingredients, h, i, j, k)
-                if s > result:
-                    result = s
-    return result
+                result_1 = max(s, result_1)
+                cal = max(0, ingredients[0].calories*h + ingredients[1].calories*i + ingredients[2].calories*j + ingredients[3].calories*k)
+                if (cal == 500):
+                    result_2 = max(s, result_2)
+    return [result_1, result_2]
 
 
 def score(ingredients, h, i, j, k):

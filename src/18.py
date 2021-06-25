@@ -21,6 +21,14 @@ def solve_1(grid):
     return len(grid.on)
 
 
+def solve_2(grid):
+    lightCorners(grid)
+    for _ in range(100):
+        grid = step(grid)
+        lightCorners(grid)
+    return len(grid.on)
+
+
 def step(grid):
     result = SimpleNamespace(on=dict(), w=grid.w, h=grid.h)
     for i in range(grid.w):
@@ -53,7 +61,13 @@ def onNeighborCount(on, i, j):
     return result
 
 
+def lightCorners(grid):
+    for coords in [(0, 0), (grid.w-1, 0), (0, grid.h-1), (grid.w-1, grid.h-1)]:
+        grid.on[coords] = True
+
+
 if __name__ == "__main__" and not sys.flags.interactive:
     lines = [line.strip() for line in fileinput.input()]
     grid = parse(lines)
     print(solve_1(grid))
+    print(solve_2(grid))

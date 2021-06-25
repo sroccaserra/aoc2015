@@ -6,11 +6,25 @@ def parse(lines):
     return [int(line) for line in lines]
 
 
-def solve(containers):
+def solve_1(containers):
     n = 0
     for subset in powerset(containers):
         if sum(subset) == 150:
             n += 1
+    return n
+
+
+def solve_2(containers):
+    n = 0
+    known_minimum = len(containers)
+    for subset in powerset(containers):
+        if sum(subset) == 150:
+            subset_length = len(subset)
+            if subset_length < known_minimum:
+                n = 0
+                known_minimum = subset_length
+            if subset_length == known_minimum:
+                n += 1
     return n
 
 
@@ -24,4 +38,5 @@ def powerset(ns):
 if __name__ == "__main__" and not sys.flags.interactive:
     lines = [line.strip() for line in fileinput.input()]
     containers = parse(lines)
-    print(solve(containers))
+    print(solve_1(containers))
+    print(solve_2(containers))

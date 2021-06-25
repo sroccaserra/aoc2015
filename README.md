@@ -1,5 +1,6 @@
 ## Learnings
 
+- There are useful implementations in Python's itertools doc: <https://docs.python.org/3/library/itertools.html> (see "Itertools Recipes" section)
 - <https://en.wikipedia.org/wiki/Knapsack_problem>
 - <https://en.wikipedia.org/wiki/Stars_and_bars_%28combinatorics%29>
 - `concatMap f . g` is `g >=> f` (see [day 10](src/10.hs))

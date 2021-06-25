@@ -1,5 +1,6 @@
 import fileinput
 import sys
+from itertools import chain, combinations
 
 
 def parse(lines):
@@ -8,8 +9,8 @@ def parse(lines):
 
 def solve_1(containers):
     n = 0
-    for subset in powerset(containers):
-        if sum(subset) == 150:
+    for subsequence in powerset(containers):
+        if sum(subsequence) == 150:
             n += 1
     return n
 
@@ -17,9 +18,9 @@ def solve_1(containers):
 def solve_2(containers):
     n = 0
     known_minimum = len(containers)
-    for subset in powerset(containers):
-        if sum(subset) == 150:
-            subset_length = len(subset)
+    for subsequence in powerset(containers):
+        if sum(subsequence) == 150:
+            subset_length = len(subsequence)
             if subset_length < known_minimum:
                 n = 0
                 known_minimum = subset_length
@@ -28,11 +29,10 @@ def solve_2(containers):
     return n
 
 
-def powerset(ns):
-    x = len(ns)
-    masks = [1 << i for i in range(x)]
-    for i in range(1 << x):
-        yield [ss for mask, ss in zip(masks, ns) if i & mask]
+# Implementation from https://docs.python.org/3/library/itertools.html
+def powerset(iterable):
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
 
 if __name__ == "__main__" and not sys.flags.interactive:

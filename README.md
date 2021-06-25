@@ -1,5 +1,6 @@
 ## Learnings
 
+- <https://en.wikipedia.org/wiki/Knapsack_problem>
 - <https://en.wikipedia.org/wiki/Stars_and_bars_%28combinatorics%29>
 - `concatMap f . g` is `g >=> f` (see [day 10](src/10.hs))
 - If I make a map of values to list of values (or a dict or hashtable of values

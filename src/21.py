@@ -22,6 +22,26 @@ def solve_1(boss_hp, boss_pw, boss_ac):
     return min_gold
 
 
+def solve_2(boss_hp, boss_pw, boss_ac):
+    shop = create_shop()
+
+    max_gold = 0
+    for weapon in shop.weapons:
+        for armor in shop.armor:
+            for ring_1 in shop.rings:
+                other_rings = list(shop.rings)
+                other_rings.remove(ring_1)
+                for ring_2 in other_rings:
+                    player = SimpleNamespace(hp=100, pw=0, ac=0)
+                    boss = SimpleNamespace(hp=boss_hp, pw=boss_pw, ac=boss_ac)
+                    player.pw += weapon.damage + ring_1.damage + ring_2.damage
+                    player.ac += armor.armor + ring_1.armor + ring_2.armor
+                    if boss == fight(player, boss):
+                        cost = weapon.cost + armor.cost + ring_1.cost + ring_2.cost
+                        max_gold = max(cost, max_gold)
+    return max_gold
+
+
 def create_shop():
     weapons = [
             SimpleNamespace(name='Dagger', cost=8, damage=4, armor=0),
@@ -69,3 +89,4 @@ def turn(player, boss):
 
 if __name__ == "__main__" and not sys.flags.interactive:
     print(solve_1(100, 8, 2))
+    print(solve_2(100, 8, 2))

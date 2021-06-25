@@ -1,6 +1,6 @@
 import fileinput
 import sys
-from re import finditer
+from re import finditer, findall
 
 
 def parse(lines):
@@ -30,7 +30,17 @@ def solve_1(data):
     return len(set(results))
 
 
+def solve_2(data):
+    molecule = data[1]
+    atoms = findall('[A-Z][a-z]*', molecule)
+    nbRn = atoms.count('Rn')
+    nbAr = atoms.count('Ar')
+    nbY = atoms.count('Y')
+    return len(atoms) - 1 - nbRn - nbAr - 2*nbY
+
+
 if __name__ == "__main__" and not sys.flags.interactive:
     lines = [line.strip() for line in fileinput.input()]
     data = parse(lines)
     print(solve_1(data))
+    print(solve_2(data))

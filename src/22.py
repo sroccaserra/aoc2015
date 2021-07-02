@@ -4,8 +4,8 @@ import sys
 FAIL = 1e10
 
 
-def search(hp, mana, b_hp, b_d,
-           is_player_turn=True, p_t=0, s_t=0, r_t=0, m=dict(),
+def search(m, hp, mana, b_hp, b_d,
+           is_player_turn=True, p_t=0, s_t=0, r_t=0,
            hard_mode=False):
     key = (hp, mana, b_hp, is_player_turn, p_t, s_t, r_t)
     memo = m.get(key)
@@ -30,13 +30,12 @@ def search(hp, mana, b_hp, b_d,
         if [] == next_spells:
             return FAIL
 
-        result = min([s[COST] + search(hp + s[HEAL], mana - s[COST],
+        result = min([s[COST] + search(m, hp + s[HEAL], mana - s[COST],
                       b_hp-s[DAMAGE], b_d,
                       False, dec(p_t)+s[P_T], dec(s_t)+s[S_T], dec(r_t)+s[R_T],
-                      m, hard_mode)
+                      hard_mode)
                       for s in next_spells])
 
-    # Boss turn
     if not is_player_turn:
         if p_t > 0:
             b_hp -= 3
@@ -50,8 +49,8 @@ def search(hp, mana, b_hp, b_d,
         if s_t > 0:
             armor = 7
         hp -= max(1, b_d-armor)
-        result = search(hp, mana, b_hp, b_d, True,
-                        dec(p_t), dec(s_t), dec(r_t), m, hard_mode)
+        result = search(m, hp, mana, b_hp, b_d, True,
+                        dec(p_t), dec(s_t), dec(r_t), hard_mode)
 
     m[key] = result
     return result
@@ -82,16 +81,18 @@ SPELLS = [
 ]
 
 
-def solve_1():
-    # return search(hp=10, mana=250, b_hp=13, b_d=8)
-    # return search(hp=10, mana=250, b_hp=14, b_d=8)
-    return search(hp=50, mana=500, b_hp=58, b_d=9, m=dict())
+def solve_1(hp, mana, b_hp, b_d):
+    return search(m=dict(),
+                  hp=hp, mana=mana, b_hp=b_hp, b_d=b_d)
 
 
-def solve_2():
-    return search(hp=50, mana=500, b_hp=58, b_d=9, m=dict(), hard_mode=True)
+def solve_2(hp, mana, b_hp, b_d):
+    return search(m=dict(),
+                  hp=hp, mana=mana, b_hp=b_hp, b_d=b_d, hard_mode=True)
 
 
 if __name__ == "__main__" and not sys.flags.interactive:
-    print(solve_1())
-    print(solve_2())
+    # print(solve_1(hp=10, mana=250, b_hp=13, b_d=8))
+    # print(solve_1(hp=10, mana=250, b_hp=14, b_d=8))
+    print(solve_1(hp=50, mana=500, b_hp=58, b_d=9))
+    print(solve_2(hp=50, mana=500, b_hp=58, b_d=9))

@@ -25,6 +25,11 @@ def solve_1(program):
     return run(machine, program)
 
 
+def solve_2(program):
+    machine = {'pc': 0, 'a': 1, 'b': 0, 'halt': False}
+    return run(machine, program)
+
+
 def run(machine, program):
     while not machine['halt'] and (machine['pc'] < len(program)):
         instruction = program[machine.get('pc')]
@@ -67,3 +72,4 @@ if __name__ == "__main__" and not sys.flags.interactive:
     lines = [line.strip() for line in fileinput.input()]
     program = parse(lines)
     print(solve_1(program))
+    print(solve_2(program))

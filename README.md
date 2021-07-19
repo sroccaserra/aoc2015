@@ -1,6 +1,9 @@
 ## Learnings
 
-- Use  `defaultdict(int)` to count elements: d = defaultdict(int) # then d[k] += 1, values default to zero
+- Use `defaultdict(int)` to count elements:
+    - d = defaultdict(int) # then d[k] += 1, values default to zero
+    - beware, in a defaultdict even a read can invalidate iterators
+    - `defaultdict(bool)` might be useful too, but a `set()` might be better
 - The sum of a number's divisors is equal to the product of (1 + p + p^2 + ... + p^k) where p is a prime divisor and k is its exponent in n's factorisation. S(144) = S(2^4.3^2) = S(2^4).S(3^2) Also, 1 + p + p^2 + . . . + p^k = (p^(k+1) - 1) / (p-1) - <https://www2.math.upenn.edu/~deturck/m170/wk3/lecture/sumdiv.html>
 - There are useful implementations in Python's itertools doc: <https://docs.python.org/3/library/itertools.html> (see "Itertools Recipes" section)
 - <https://en.wikipedia.org/wiki/Knapsack_problem>

@@ -5,7 +5,7 @@ See also:
 - <https://github.com/sroccaserra/aoc2019#learnings>
 - <https://github.com/sroccaserra/aoc2020#learnings>
 - <https://github.com/sroccaserra/aoc2021#learnings>
-- <https://github.com/sroccaserra/aoc2022>
+- <https://github.com/sroccaserra/aoc2022#learnings>
 
 ### Python
 
